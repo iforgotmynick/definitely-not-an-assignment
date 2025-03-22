@@ -1,0 +1,90 @@
+.bike-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.bike-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 16px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.bike-card:hover {
+  background-color: #fefefe;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.bike-thumb img {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.bike-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bike-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #202020;
+}
+
+.bike-details {
+  font-size: 12px;
+  color: #2e2e2e;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bike-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 500;
+  background-color: #e0e0e0;
+  color: #3e3e3e;
+}
+
+.badge.color {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+
+.badge.status.stolen {
+  background-color: #ffebee;
+  color: #c22222;
+}
+
+.badge.status.found {
+  background-color: #e8f5e9;
+  color: #22c222;
+}
+
+.empty-state {
+  padding: 16px;
+  text-align: center;
+  color: #8e8e8e;
+}

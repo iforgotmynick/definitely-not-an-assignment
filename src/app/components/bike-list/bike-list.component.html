@@ -1,1 +1,33 @@
-<p>bike-list works!</p>
+@if (bikes(); as bikeList) {
+  <ul class="bike-list">
+    @for (bike of bikeList.bikes; track bike.id) {
+      <li class="bike-card" (click)="onBikeClick(bike)">
+        <div class="bike-info">
+          <h3 class="bike-title">{{ bike.title || 'Untitled Bike' }}</h3>
+
+          <div class="bike-tags">
+            @for (color of bike.frame_colors; track color) {
+              <span class="badge color">{{ color }}</span>
+            }
+
+            <span
+              class="badge status"
+              [class.stolen]="bike.stolen"
+              [class.found]="!bike.stolen"
+            >
+              {{ bike.stolen ? 'Stolen' : 'Recovered' }}
+            </span>
+          </div>
+        </div>
+
+        @if (bike.thumb) {
+          <div class="bike-thumb">
+            <img [src]="bike.thumb" alt="{{ bike.title }}" />
+          </div>
+        }
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="empty-state">Loading bikes or no data available.</p>
+}
