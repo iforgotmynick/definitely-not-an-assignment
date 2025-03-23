@@ -1,33 +1,63 @@
+<h1>BikeIndex List</h1>
+
 @if (bikes(); as bikeList) {
-  <ul class="bike-list">
-    @for (bike of bikeList.bikes; track bike.id) {
-      <li class="bike-card" (click)="onBikeClick(bike)">
-        <div class="bike-info">
-          <h3 class="bike-title">{{ bike.title || 'Untitled Bike' }}</h3>
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Search bike by city"
+      [(ngModel)]="searchValue"
+    />
+  </div>
+  <div class="pagination">
+    <button [disabled]="this.currentPage() <= 1" (click)="firstPage()">
+      ‹‹ First
+    </button>
 
-          <div class="bike-tags">
-            @for (color of bike.frame_colors; track color) {
-              <span class="badge color">{{ color }}</span>
-            }
+    <button [disabled]="this.currentPage() <= 1" (click)="prevPage()">
+      ‹ Prev
+    </button>
 
-            <span
-              class="badge status"
-              [class.stolen]="bike.stolen"
-              [class.found]="!bike.stolen"
-            >
-              {{ bike.stolen ? 'Stolen' : 'Recovered' }}
-            </span>
+    <span>Page {{ currentPage() }} of {{ allPages() }}</span>
+
+    <button [disabled]="this.currentPage() >= allPages()" (click)="nextPage()">
+      Next ›
+    </button>
+
+    <button [disabled]="this.currentPage() >= allPages()" (click)="lastPage()">
+      Last ››
+    </button>
+  </div>
+  <div class="bike-list-wrapper">
+    <ul class="bike-list">
+      @for (bike of bikeList.bikes; track bike.id) {
+        <li class="bike-card" (click)="onBikeClick(bike)">
+          <div class="bike-info">
+            <h3 class="bike-title">{{ bike.title || "Untitled Bike" }}</h3>
+
+            <div class="bike-tags">
+              @for (color of bike.frame_colors; track color) {
+                <span class="badge color">{{ color }}</span>
+              }
+
+              <span
+                class="badge status"
+                [class.stolen]="bike.stolen"
+                [class.found]="!bike.stolen"
+              >
+                {{ bike.stolen ? "Stolen" : "Recovered" }}
+              </span>
+            </div>
           </div>
-        </div>
 
-        @if (bike.thumb) {
-          <div class="bike-thumb">
-            <img [src]="bike.thumb" alt="{{ bike.title }}" />
-          </div>
-        }
-      </li>
-    }
-  </ul>
+          @if (bike.thumb) {
+            <div class="bike-thumb">
+              <img [src]="bike.thumb" alt="{{ bike.title }}" />
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  </div>
 } @else {
   <p class="empty-state">Loading bikes or no data available.</p>
 }

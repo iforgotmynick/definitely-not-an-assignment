@@ -1,4 +1,4 @@
-import { Bike } from "./bike.type";
+import { Bike } from "./bike";
 
 export interface BikeList {
   bikes: Bike[];
