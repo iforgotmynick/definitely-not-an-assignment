@@ -1,8 +1,8 @@
 import { HttpParams, httpResource } from '@angular/common/http';
 import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
-import { BikeList } from '../../interfaces/bike-list';
-import { BikeCount } from '../../interfaces/bike-count';
-import { BIKES_PER_PAGE } from '../../constants/bikes-per-page';
+import { BikeList } from '../interfaces/bike-list';
+import { BikeCount } from '../interfaces/bike-count';
+import { BIKES_PER_PAGE } from '../constants/bikes-per-page';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class BikeListService {
       url: `${this.URL}/search`,
       params,
     };
-  });
+  }).asReadonly();
 
   readonly bikeListCountResource = httpResource<BikeCount>(() => {
     const location = this.location();
@@ -39,7 +39,7 @@ export class BikeListService {
       url: `${this.URL}/search/count`,
       params,
     };
-  });
+  }).asReadonly();
 
   readonly currentPage: Signal<number> = this.page.asReadonly();
 

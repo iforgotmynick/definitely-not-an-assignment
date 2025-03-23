@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ModelSignal, Signal, WritableSignal, computed, effect, inject, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ModelSignal, Signal, computed, effect, inject, model } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Observable, debounceTime } from 'rxjs';
-import { BikeListService } from './bike-list.service';
+import { BikeListService } from '../../service/bike-list.service';
 import { BikeList } from '../../interfaces/bike-list';
 import { Bike } from '../../interfaces/bike';
 import { BikeCount } from '../../interfaces/bike-count';
 import { BIKES_PER_PAGE } from '../../constants/bikes-per-page';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-bike-list',
-  imports: [FormsModule],
+  imports: [FormsModule, LoadingComponent],
   templateUrl: './bike-list.component.html',
   styleUrl: './bike-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,8 +20,8 @@ export class BikeListComponent {
   private readonly bikeListService = inject(BikeListService);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly bikes: WritableSignal<BikeList | undefined> = this.bikeListService.bikeListResource.value;
-  readonly count: WritableSignal<BikeCount | undefined> = this.bikeListService.bikeListCountResource.value;
+  readonly bikes: Signal<BikeList | undefined> = this.bikeListService.bikeListResource.value;
+  readonly count: Signal<BikeCount | undefined> = this.bikeListService.bikeListCountResource.value;
   readonly currentPage: Signal<number> = this.bikeListService.currentPage;
   readonly allPages: Signal<number> = computed(() => {
     return Math.ceil((this.count()?.non || 0) / BIKES_PER_PAGE);
