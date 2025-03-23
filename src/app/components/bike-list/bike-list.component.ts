@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ModelSignal, Signal, co
 import {FormsModule} from '@angular/forms';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Observable, debounceTime } from 'rxjs';
-import { BikeListService } from '../../service/bike-list.service';
+import { BikeService } from '../../service/bike.service';
 import { BikeList } from '../../interfaces/bike-list';
 import { Bike } from '../../interfaces/bike';
 import { BikeCount } from '../../interfaces/bike-count';
 import { BIKES_PER_PAGE } from '../../constants/bikes-per-page';
 import { LoadingComponent } from '../loading/loading.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bike-list',
@@ -17,12 +18,13 @@ import { LoadingComponent } from '../loading/loading.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BikeListComponent {
-  private readonly bikeListService = inject(BikeListService);
+  private readonly router = inject(Router);
+  private readonly bikeService = inject(BikeService);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly bikes: Signal<BikeList | undefined> = this.bikeListService.bikeListResource.value;
-  readonly count: Signal<BikeCount | undefined> = this.bikeListService.bikeListCountResource.value;
-  readonly currentPage: Signal<number> = this.bikeListService.currentPage;
+  readonly bikes: Signal<BikeList | undefined> = this.bikeService.bikeListResource.value;
+  readonly count: Signal<BikeCount | undefined> = this.bikeService.bikeListCountResource.value;
+  readonly currentPage: Signal<number> = this.bikeService.currentPage;
   readonly allPages: Signal<number> = computed(() => {
     return Math.ceil((this.count()?.non || 0) / BIKES_PER_PAGE);
   })
@@ -36,27 +38,27 @@ export class BikeListComponent {
     this.searchValueDebounced$.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe((city) => {
-      this.bikeListService.updateLocation(city);
+      this.bikeService.updateLocation(city);
     });
   });
 
-  onBikeClick(bike: Bike): void {
-    console.log('to bike', bike)
+  onBikeClick(id: number): void {
+    this.router.navigate(['/bikes', id]);
   }
 
   firstPage(): void {
-    this.bikeListService.updatePage(1);
+    this.bikeService.updatePage(1);
   }
 
   lastPage(): void {
-    this.bikeListService.updatePage(this.allPages());
+    this.bikeService.updatePage(this.allPages());
   }
 
   prevPage(): void {
-    this.bikeListService.updatePage(this.currentPage() - 1);
+    this.bikeService.updatePage(this.currentPage() - 1);
   }
 
   nextPage(): void {
-    this.bikeListService.updatePage(this.currentPage() + 1);
+    this.bikeService.updatePage(this.currentPage() + 1);
   }
 }

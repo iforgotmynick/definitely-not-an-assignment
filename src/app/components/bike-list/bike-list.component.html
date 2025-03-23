@@ -1,5 +1,4 @@
 <h1>BikeIndex List</h1>
-<!-- All credits for this beautiful animation go to https://codepen.io/jkantner/pen/XWPbNNE -->
 
 @if (bikes(); as bikeList) {
   <div class="search-bar">
@@ -31,7 +30,7 @@
   <div class="bike-list-wrapper">
     <ul class="bike-list">
       @for (bike of bikeList.bikes; track bike.id) {
-        <li class="bike-card" (click)="onBikeClick(bike)">
+        <li class="bike-card" (click)="onBikeClick(bike.id)">
           <div class="bike-info">
             <h3 class="bike-title">{{ bike.title || "Untitled Bike" }}</h3>
 
@@ -60,5 +59,6 @@
     </ul>
   </div>
 } @else {
-  <app-loading></app-loading>
+  <app-loading class="loading"></app-loading>
 }
+

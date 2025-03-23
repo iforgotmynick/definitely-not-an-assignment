@@ -1,0 +1,61 @@
+.bike-card {
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin: auto;
+  flex-wrap: wrap;
+
+  .bike-image {
+    flex: 0 0 150px;
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+  }
+
+  .bike-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .model {
+      font-weight: bold;
+      color: #6e6e6e;
+    }
+
+    .metadata {
+      margin-top: 8px;
+
+      p {
+        margin: 4px 0;
+        font-size: 14px;
+      }
+    }
+
+    .colors {
+      margin-top: 8px;
+
+      .color-tag {
+        display: inline-block;
+        background: #e0e0e0;
+        color: #3e3e3e;
+        padding: 4px 8px;
+        border-radius: 8px;
+        margin-right: 4px;
+        font-size: 12px;
+      }
+    }
+  }
+}

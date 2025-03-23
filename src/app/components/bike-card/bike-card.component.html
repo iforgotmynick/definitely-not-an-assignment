@@ -1,0 +1,27 @@
+@if (bike(); as bike) {
+<div class="bike-card">
+  <div class="bike-image">
+    <img [src]="bike.large_img || bike.thumb || 'assets/default-bike.png'" alt="{{ bike.title }}" />
+  </div>
+  <div class="bike-info">
+    <h2>{{ bike.title }}</h2>
+    <p>{{ bike.description }}</p>
+
+    <div class="metadata">
+      <p><strong>Serial:</strong> {{ bike.serial }}</p>
+      <p><strong>Stolen from:</strong> {{ bike.stolen_location || '' }}</p>
+      <p><strong>Found at:</strong> {{ bike.location_found || '' }}</p>
+      <p><strong>Status:</strong> {{ bike.status || (bike.stolen ? 'Stolen' : 'Unknown') }}</p>
+    </div>
+
+    <div class="colors">
+      <strong>Colors:</strong>
+      @for (color of bike.frame_colors; track color) {
+        <span class="color-tag">{{ color }}</span>
+      }
+    </div>
+  </div>
+</div>
+} @else {
+  <app-loading class="loading"></app-loading>
+}
