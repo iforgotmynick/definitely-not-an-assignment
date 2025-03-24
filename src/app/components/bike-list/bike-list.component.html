@@ -1,4 +1,4 @@
-<h1>BikeIndex List</h1>
+<h1>BikeIndex Search App</h1>
 
 @defer (when bikes()) {
   @let bikesList = bikes();
@@ -60,8 +60,6 @@
       }
     </ul>
   </div>
-} @loading {
+} @placeholder (minimum 1s) {
   <app-loading></app-loading>
-} @error {
-  <span>Something went wrong</span>
 }

@@ -1,4 +1,9 @@
-<h1>Bike Data</h1>
+<header class="header">
+  <button class="back-button" (click)="goBack()">
+    ← Back
+  </button>
+  <h1 class="title">Bike Data</h1>
+</header>
 
 @defer (when bike()) {
   @let bikeData = bike()?.bike!;
@@ -32,12 +37,14 @@
       </div>
     </div>
   </div>
-} @loading {
-  <app-loading></app-loading>
-} @error {
-  <span>Something went wrong</span>
+}
+
+@placeholder (minimum 1s) {
+  @if (!bikeError()) {
+    <app-loading></app-loading>
+  }
 }
 
 @if (bikeError() && bikeError()!.error.error; as error) {
-  <span>{{error}}</span>
+  <h3 class="error-message">{{error}}</h3>
 }

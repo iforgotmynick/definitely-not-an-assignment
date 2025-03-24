@@ -1,20 +1,27 @@
 import { HttpParams, httpResource } from '@angular/common/http';
-import { Injectable, Resource, Signal, WritableSignal, signal } from '@angular/core';
+import { DestroyRef, Injectable, Resource, Signal, WritableSignal, effect, inject, signal } from '@angular/core';
 import { BikeList } from '../interfaces/bike-list';
 import { BikeCount } from '../interfaces/bike-count';
 import { BIKES_PER_PAGE } from '../constants/bikes-per-page';
 import { BikeFull } from '../interfaces/bike-full';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { Observable, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BikeService {
+
   private readonly URL: string = 'https://bikeindex.org/api/v3';
   private readonly location: WritableSignal<string> = signal<string>('');
   private readonly page: WritableSignal<number> = signal<number>(1);
   private readonly bikeId: WritableSignal<number | null> = signal<number | null>(null);
 
+  readonly searchValue: WritableSignal<string> = signal<string>('');
+
   readonly currentPage: Signal<number> = this.page.asReadonly();
+  readonly currentLocation: Signal<string> = this.location.asReadonly();
 
   readonly bikeListResource: Resource<BikeList | undefined> = httpResource<BikeList>(() => {
     const location = this.location();
@@ -58,8 +65,10 @@ export class BikeService {
   }
 
   updateLocation(location: string): void {
-    this.location.set(location);
-    this.updatePage(1);
+    if (this.location() !== location) {
+      this.location.set(location);
+      this.updatePage(1);
+    }
   }
 
   updateId(bikeId: number): void {

@@ -1,10 +1,9 @@
-import { Component, DestroyRef, OnInit, Signal, inject } from '@angular/core';
-import { Bike } from '../../interfaces/bike';
+import { Component, OnInit, Signal, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { BikeService } from '../../service/bike.service';
 import { LoadingComponent } from '../loading/loading.component';
 import { BikeFull } from '../../interfaces/bike-full';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-bike-card',
@@ -15,6 +14,7 @@ import { CommonModule } from '@angular/common';
 export class BikeCardComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly bikeService = inject(BikeService);
+  private readonly location = inject(Location);
 
   readonly bike: Signal<{bike: BikeFull} | undefined> = this.bikeService.bikeResource.value;
   readonly bikeError: Signal<{ error: {error: string}} | undefined> = this.bikeService.bikeResource.error as Signal<{ error: {error: string}} | undefined>;
@@ -23,5 +23,9 @@ export class BikeCardComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     this.bikeService.updateId(id);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }
