@@ -1,27 +1,43 @@
-@if (bike(); as bike) {
-<div class="bike-card">
-  <div class="bike-image">
-    <img [src]="bike.large_img || bike.thumb || 'assets/default-bike.png'" alt="{{ bike.title }}" />
-  </div>
-  <div class="bike-info">
-    <h2>{{ bike.title }}</h2>
-    <p>{{ bike.description }}</p>
+<h1>Bike Data</h1>
 
-    <div class="metadata">
-      <p><strong>Serial:</strong> {{ bike.serial }}</p>
-      <p><strong>Stolen from:</strong> {{ bike.stolen_location || '' }}</p>
-      <p><strong>Found at:</strong> {{ bike.location_found || '' }}</p>
-      <p><strong>Status:</strong> {{ bike.status || (bike.stolen ? 'Stolen' : 'Unknown') }}</p>
-    </div>
+@defer (when bike()) {
+  @let bikeData = bike()?.bike!;
 
-    <div class="colors">
-      <strong>Colors:</strong>
-      @for (color of bike.frame_colors; track color) {
-        <span class="color-tag">{{ color }}</span>
-      }
+  <div class="bike-card">
+    <div class="bike-image">
+      <img
+        [src]="bikeData.large_img || bikeData.thumb || 'assets/default-bike.jpg'"
+        alt="{{ bikeData.title }}"
+      />
+    </div>
+    <div class="bike-info">
+      <h2>{{ bikeData.title }}</h2>
+      <p><strong>Description:</strong> {{ bikeData.description || "-" }}</p>
+
+      <div class="metadata">
+        <p><strong>Serial:</strong> {{ bikeData.serial || "-"  }}</p>
+        <p><strong>Stolen from:</strong> {{ bikeData.stolen_location || "-" }}</p>
+        <p><strong>Found at:</strong> {{ bikeData.location_found || "-" }}</p>
+        <p>
+          <strong>Status:</strong>
+          {{ bikeData.status || (bikeData.stolen ? "Stolen" : "Unknown") }}
+        </p>
+      </div>
+
+      <div class="colors">
+        <strong>Colors:</strong>
+        @for (color of bikeData.frame_colors; track color) {
+          <span class="color-tag">{{ color }}</span>
+        }
+      </div>
     </div>
   </div>
-</div>
-} @else {
-  <app-loading class="loading"></app-loading>
+} @loading {
+  <app-loading></app-loading>
+} @error {
+  <span>Something went wrong</span>
+}
+
+@if (bikeError() && bikeError()!.error.error; as error) {
+  <span>{{error}}</span>
 }

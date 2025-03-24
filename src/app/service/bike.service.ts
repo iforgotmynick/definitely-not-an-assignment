@@ -1,28 +1,31 @@
 import { HttpParams, httpResource } from '@angular/common/http';
-import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
+import { Injectable, Resource, Signal, WritableSignal, signal } from '@angular/core';
 import { BikeList } from '../interfaces/bike-list';
 import { BikeCount } from '../interfaces/bike-count';
 import { BIKES_PER_PAGE } from '../constants/bikes-per-page';
-import { Bike } from '../interfaces/bike';
+import { BikeFull } from '../interfaces/bike-full';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BikeService {
-  private readonly URL = 'https://bikeindex.org/api/v3';
-
-  id = signal(1);
+  private readonly URL: string = 'https://bikeindex.org/api/v3';
   private readonly location: WritableSignal<string> = signal<string>('');
   private readonly page: WritableSignal<number> = signal<number>(1);
   private readonly bikeId: WritableSignal<number | null> = signal<number | null>(null);
 
-  readonly bikeListResource = httpResource<BikeList>(() => {
+  readonly currentPage: Signal<number> = this.page.asReadonly();
+
+  readonly bikeListResource: Resource<BikeList | undefined> = httpResource<BikeList>(() => {
     const location = this.location();
     const page = this.page();
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('page', page)
-      .set('per_page', BIKES_PER_PAGE)
-      .set('location', location);
+      .set('per_page', BIKES_PER_PAGE);
+
+    if (location) {
+      params = params.set('location', location).set('stolenness', 'proximity').set('distance', 1);
+    }
 
     return {
       url: `${this.URL}/search`,
@@ -30,13 +33,13 @@ export class BikeService {
     };
   }).asReadonly();
 
-  readonly bikeListCountResource = httpResource<BikeCount>(() => {
+  readonly bikeListCountResource: Resource<BikeCount | undefined> = httpResource<BikeCount>(() => {
     const location = this.location();
-    const page = this.page();
-    const params = new HttpParams()
-      .set('page', page)
-      .set('per_page', BIKES_PER_PAGE)
-      .set('location', location);
+    let params = new HttpParams();
+
+    if (location) {
+      params = params.set('location', location).set('stolenness', 'proximity').set('distance', 1);
+    }
 
     return {
       url: `${this.URL}/search/count`,
@@ -44,11 +47,11 @@ export class BikeService {
     };
   }).asReadonly();
 
-  readonly bikeResource = httpResource<Bike>(() => ({
-    url: `${this.URL}/bikes/${this.bikeId()}`
-  })).asReadonly();
+  readonly bikeResource: Resource<{bike: BikeFull} | undefined> = httpResource<{bike: BikeFull}>(() => {
+    const bikeId = this.bikeId();
 
-  readonly currentPage: Signal<number> = this.page.asReadonly();
+    return bikeId ? `${this.URL}/bikes/${this.bikeId()}` : undefined;
+  }).asReadonly();
 
   updatePage(pageNumber: number): void {
     this.page.set(pageNumber);

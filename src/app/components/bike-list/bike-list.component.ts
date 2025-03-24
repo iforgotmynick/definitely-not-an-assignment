@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ModelSignal, Signal, computed, effect, inject, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ModelSignal, Signal, computed, inject, model } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { Observable, debounceTime } from 'rxjs';
+import { Observable, debounceTime, distinctUntilChanged } from 'rxjs';
 import { BikeService } from '../../service/bike.service';
 import { BikeList } from '../../interfaces/bike-list';
-import { Bike } from '../../interfaces/bike';
 import { BikeCount } from '../../interfaces/bike-count';
 import { BIKES_PER_PAGE } from '../../constants/bikes-per-page';
 import { LoadingComponent } from '../loading/loading.component';
@@ -26,21 +25,25 @@ export class BikeListComponent {
   readonly count: Signal<BikeCount | undefined> = this.bikeService.bikeListCountResource.value;
   readonly currentPage: Signal<number> = this.bikeService.currentPage;
   readonly allPages: Signal<number> = computed(() => {
-    return Math.ceil((this.count()?.non || 0) / BIKES_PER_PAGE);
+    const searchValue: string = this.searchValue();
+    const totalBikes: number = (searchValue ? (this.count()?.proximity || this.count()?.non) : this.count()?.non) || 0;
+
+    return Math.ceil(totalBikes / BIKES_PER_PAGE);
   })
 
   readonly searchValue: ModelSignal<string> = model<string>('');
   readonly searchValueDebounced$: Observable<string> = toObservable(this.searchValue).pipe(
-    debounceTime(400)
+    debounceTime(400),
+    distinctUntilChanged(),
   );
 
-  private readonly searchEffect = effect(() => {
+  ngOnInit(): void {
     this.searchValueDebounced$.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe((city) => {
       this.bikeService.updateLocation(city);
     });
-  });
+  }
 
   onBikeClick(id: number): void {
     this.router.navigate(['/bikes', id]);

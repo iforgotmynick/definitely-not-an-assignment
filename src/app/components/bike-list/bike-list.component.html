@@ -1,6 +1,8 @@
 <h1>BikeIndex List</h1>
 
-@if (bikes(); as bikeList) {
+@defer (when bikes()) {
+  @let bikesList = bikes();
+
   <div class="search-bar">
     <input
       type="text"
@@ -29,7 +31,7 @@
   </div>
   <div class="bike-list-wrapper">
     <ul class="bike-list">
-      @for (bike of bikeList.bikes; track bike.id) {
+      @for (bike of bikesList?.bikes; track bike.id) {
         <li class="bike-card" (click)="onBikeClick(bike.id)">
           <div class="bike-info">
             <h3 class="bike-title">{{ bike.title || "Untitled Bike" }}</h3>
@@ -58,7 +60,8 @@
       }
     </ul>
   </div>
-} @else {
-  <app-loading class="loading"></app-loading>
+} @loading {
+  <app-loading></app-loading>
+} @error {
+  <span>Something went wrong</span>
 }
-

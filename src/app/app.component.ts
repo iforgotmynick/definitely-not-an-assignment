@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { BikeListComponent } from './components/bike-list/bike-list.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({

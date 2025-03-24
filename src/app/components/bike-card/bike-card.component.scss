@@ -1,3 +1,10 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
 .bike-card {
   display: flex;
   gap: 16px;
@@ -5,8 +12,7 @@
   border-radius: 16px;
   background: #FFFFFF;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  max-width: 600px;
-  margin: auto;
+  max-width: 640px;
   flex-wrap: wrap;
 
   .bike-image {
@@ -17,6 +23,15 @@
       height: auto;
       border-radius: 8px;
       object-fit: cover;
+      transition: transform 0.3s ease;
+      transform-origin: center center;
+    }
+
+    img:hover {
+      transform: scale(3);
+      transform-origin: top;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      border: 1px solid #FFFFFF;
     }
   }
 
