@@ -1,5 +1,5 @@
-import { PublicImage } from './public-image';
-import { StolenRecord } from './stolen-record';
+import {PublicImage} from './public-image';
+import {StolenRecord} from './stolen-record';
 
 export interface BikeFull {
   date_stolen: number;
