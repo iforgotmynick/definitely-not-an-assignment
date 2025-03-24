@@ -80,7 +80,7 @@ export class BikeListComponent {
 
   private subscribeToSearch(): void {
     this.searchValueDebounced$
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((location) => {
         this.bikeService.updateLocation(location);
       });
@@ -93,8 +93,10 @@ export class BikeListComponent {
         const page = Number(params.get('page'));
         const location = params.get('location');
 
-        if (!isNaN(page)) this.bikeService.updatePage(page);
-        if (location) this.searchValue.set(location);
+        if (!isNaN(page) && page !== this.currentPage())
+          this.bikeService.updatePage(page || 1);
+        if (location && location !== this.currentLocation())
+          this.searchValue.set(location);
       });
   }
 

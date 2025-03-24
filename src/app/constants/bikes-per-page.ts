@@ -1,1 +1,1 @@
-export const BIKES_PER_PAGE: number = 10;
+export const BIKES_PER_PAGE = 10;

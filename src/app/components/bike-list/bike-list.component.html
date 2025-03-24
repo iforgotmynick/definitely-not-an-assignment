@@ -31,7 +31,11 @@
   <div class="bike-list-wrapper">
     <ul class="bike-list">
       @for (bike of bikesList; track bike.id) {
-        <li class="bike-card" (click)="onBikeClick(bike.id)">
+        <li
+          class="bike-card"
+          role="presentation"
+          (click)="onBikeClick(bike.id)"
+        >
           <div class="bike-info">
             <h3 class="bike-title">{{ bike.title || 'Untitled Bike' }}</h3>
 

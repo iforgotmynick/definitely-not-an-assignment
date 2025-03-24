@@ -1,4 +1,10 @@
-import {ChangeDetectionStrategy, Component, OnInit, Signal, inject} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  Signal,
+  inject,
+} from '@angular/core';
 import {CommonModule, Location, NgOptimizedImage} from '@angular/common';
 import {ActivatedRoute} from '@angular/router';
 import {BikeService} from '../../service/bike.service';
